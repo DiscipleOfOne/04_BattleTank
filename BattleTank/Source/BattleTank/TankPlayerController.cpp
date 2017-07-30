@@ -20,7 +20,5 @@ void ATankPlayerController::BeginPlay()
     {
         UE_LOG(LogTemp, Warning, TEXT("No Tank is Currently Possesed"))
         return;
-    }
-    UE_LOG(LogTemp, Warning, TEXT("AI Possessed Tank is Called: %S"), *(ControlledTank->GetName()))
-    
+    }    
 }
