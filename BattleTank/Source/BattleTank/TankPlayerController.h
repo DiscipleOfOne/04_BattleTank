@@ -16,8 +16,17 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
+    ATankPlayerController(); // Constructor
+    
     ATank* GetControlledTank() const;
     virtual void BeginPlay() override;
+    
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
+
 	
-	
+private:
+    // Moves the barrel towards the crosshair so a shot can hit where the crosshair intersects the world
+    void AimTowardsCrosshair();
+
 };

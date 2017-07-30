@@ -32,7 +32,7 @@ ATank* ATankAIController::GetPlayerTank() const
     auto *PlayerPawn =  GetWorld()->GetFirstPlayerController()->GetPawn();
     if(PlayerPawn)
     {
-        return Cast<ATank>(PlayerController);
+        return Cast<ATank>(PlayerPawn);
     }
     else
     {
