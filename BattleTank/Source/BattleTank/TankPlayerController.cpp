@@ -48,11 +48,10 @@ void ATankPlayerController::AimTowardsCrosshair()
     FVector HitLocation; // Out Parameter
     if(GetSightRayHitLocation(HitLocation)) // True Means It has hit something
     {
+        GetControlledTank()->AimAt(HitLocation);
         //UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString())
     }
-    //GetWorld Location Through Crosshair
-    // If it hits something
-    // Move the barrel so it can hit it
+    
 }
 
 
@@ -70,8 +69,6 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
         GetLookVectorHitLocation(LookDirection, LookLocation, HitLocation);
         
     }
-//    UE_LOG(LogTemp,Warning,TEXT("LookDirection: %s"), *LookDirection.ToString())
-    HitLocation =  FVector(1.0f);
     return true;
 }
 
@@ -110,13 +107,7 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
      ))
     {
         HitLocation = HitResult.Location;
-        UE_LOG(LogTemp,Warning, TEXT("Captain We've Hit something at: %s"), *HitResult.Location.ToString())
         return true;
-    }
-    else
-    {
-        UE_LOG(LogTemp,Warning, TEXT("Captain We've Got Nothing"))
-
     }
     return true;
     

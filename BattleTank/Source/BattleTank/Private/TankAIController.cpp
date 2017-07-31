@@ -16,8 +16,19 @@ void ATankAIController::BeginPlay()
     {
         UE_LOG(LogTemp, Error, TEXT("AI Tank Controller Hasn't Foudn the Player Controller"))
     }
-    
 }
+
+void ATankAIController::Tick(float DeltaTime)
+{
+    ATank* PlayerTank = GetPlayerTank();
+    ATank* AITank = GetControlledTank();
+    Super::Tick(DeltaTime);
+    if( PlayerTank && AITank)
+    {   //
+        GetControlledTank()->AimAt(GetPlayerTank()->GetActorLocation());
+    }
+}
+
 
 
 ATank* ATankAIController::GetControlledTank() const
