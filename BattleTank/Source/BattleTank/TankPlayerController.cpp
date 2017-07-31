@@ -30,7 +30,7 @@ void ATankPlayerController::BeginPlay()
 void ATankPlayerController::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    UE_LOG(LogTemp, Warning, TEXT("Tick Tick Motherfucker"))
+    AimTowardsCrosshair();
 }
 
 
@@ -44,7 +44,80 @@ ATank* ATankPlayerController::GetControlledTank() const
 void ATankPlayerController::AimTowardsCrosshair()
 {
     if(!GetControlledTank()) {return;}
+    
+    FVector HitLocation; // Out Parameter
+    if(GetSightRayHitLocation(HitLocation)) // True Means It has hit something
+    {
+        //UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString())
+    }
     //GetWorld Location Through Crosshair
     // If it hits something
     // Move the barrel so it can hit it
+}
+
+
+bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
+{
+    // Found Crosshair Position In Screen Coordinates
+    int32 ViewportSizeX, ViewportSizeY;
+    GetViewportSize(ViewportSizeX, ViewportSizeY);
+    FVector2D ScreenLocation(ViewportSizeX*CrossHairXLocation, ViewportSizeY*CrossHairYLocation);
+    
+    FVector LookDirection;
+    FVector LookLocation;
+    if(GetLookDirection(ScreenLocation, LookDirection, LookLocation))
+    {
+        GetLookVectorHitLocation(LookDirection, LookLocation, HitLocation);
+        
+    }
+//    UE_LOG(LogTemp,Warning,TEXT("LookDirection: %s"), *LookDirection.ToString())
+    HitLocation =  FVector(1.0f);
+    return true;
+}
+
+
+bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector &LookDirection, FVector &LookLocation) const
+{
+    FVector CameraWorldLocation; // To Be Trashed
+    
+    return DeprojectScreenPositionToWorld
+    (
+     ScreenLocation.X,
+     ScreenLocation.Y,
+     LookLocation,
+     LookDirection
+     );
+}
+
+
+bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector &LookLocation, FVector &HitLocation) const
+{
+    FVector PlayerViewPointLocation;
+    FRotator PlayerViewPointRotation;
+    FHitResult HitResult;
+    FVector EndLocation = LookLocation + (LookDirection * LineTraceRange);
+    FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetControlledTank());
+    FCollisionResponseParams ResponseParameters = FCollisionResponseParams();    
+    
+    if (GetWorld()->LineTraceSingleByChannel
+    (
+     HitResult,
+     LookLocation,
+     EndLocation,
+     ECC_Visibility,
+     TraceParameters,
+     ResponseParameters
+     ))
+    {
+        HitLocation = HitResult.Location;
+        UE_LOG(LogTemp,Warning, TEXT("Captain We've Hit something at: %s"), *HitResult.Location.ToString())
+        return true;
+    }
+    else
+    {
+        UE_LOG(LogTemp,Warning, TEXT("Captain We've Got Nothing"))
+
+    }
+    return true;
+    
 }
