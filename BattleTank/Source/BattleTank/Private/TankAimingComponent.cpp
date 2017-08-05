@@ -49,7 +49,7 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceAim, float LaunchSpeed)
      ActorIgnoreList,
      false
      );
-    
+
     if(BHaveAimSolution)
     {
         

@@ -15,27 +15,16 @@ void ATankPlayerController::BeginPlay()
 {
     Super::BeginPlay();
     
-    UE_LOG(LogTemp, Warning, TEXT("Tank Player Controller Is Alive"))
-
-    
     auto ControlledTank = GetControlledTank();
     if(!ControlledTank)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("No Tank is Currently Possesed"))
-        return;
-    }    
+    { return; }
 }
-
-
 
 void ATankPlayerController::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
     AimTowardsCrosshair();
 }
-
-
-
 
 ATank* ATankPlayerController::GetControlledTank() const
 {
