@@ -8,6 +8,7 @@
 
 
 class ATank;
+class UTankAimingComponent;
 /**
  * 
  */
@@ -27,6 +28,9 @@ public:
 protected:
     UFUNCTION(BlueprintCallable, Category = "Setup")
     ATank* GetControlledTank() const;
+    
+    UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+    void FoundAimingComponent(UTankAimingComponent *AimCompRef);
 	
 private:
     // Moves the barrel towards the crosshair so a shot can hit where the crosshair intersects the world

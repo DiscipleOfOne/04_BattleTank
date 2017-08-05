@@ -22,7 +22,7 @@ void UTankAimingComponent::Initialize(UTankBarrel *BarrelToSet, UTankTurret* Tur
 
 void UTankAimingComponent::AimAt(FVector WorldSpaceAim)
 {
-    if(!Barrel){ return; }
+    if(!ensure(Barrel)){ return; }
     auto *PawnOwner = GetOwner();
     FVector OutLaunchVelocity;
     FVector StartLocation = Barrel->GetSocketLocation(FName("Muzzle"));
@@ -63,7 +63,7 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceAim)
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
-    if(!Barrel || !Turret) { return; }
+    if(!ensure(Barrel && Turret)) { return; }
     auto BarrelRotator = Barrel->GetForwardVector().Rotation();
     auto AimAsRotator = AimDirection.Rotation();
     auto DeltaRotator = AimAsRotator - BarrelRotator;
@@ -73,8 +73,9 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 
 void UTankAimingComponent::Fire()
 {
+    if(!ensure(ProjectileBlueprint && Barrel)) {return;}
     bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
-    if(Barrel && isReloaded && ProjectileBlueprint)
+    if(isReloaded)
     {
         FVector StartLocation = Barrel->GetSocketLocation(FName("Muzzle"));
         auto BarrelRotator = Barrel->GetForwardVector().Rotation();

@@ -18,7 +18,6 @@ public:
     UFUNCTION(BlueprintCallable)
     void Fire();
     
-
 private:
     // Sets default values for this pawn's properties
     ATank();

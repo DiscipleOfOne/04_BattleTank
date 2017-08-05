@@ -59,7 +59,7 @@ private:
     
 protected:
     UPROPERTY(BlueprintReadOnly, Category = "State")
-    EFiringState FiringState = EFiringState::Reloading;
+    EFiringState FiringState = EFiringState::Locked;
 
     
     void MoveBarrelTowards(FVector AimDirection);
