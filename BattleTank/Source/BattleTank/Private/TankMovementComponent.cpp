@@ -3,9 +3,15 @@
 #include "TankMovementComponent.h"
 #include "TankTrack.h"
 
+void UTankMovementComponent::Initialize(UTankTrack *LeftTrackToSet, UTankTrack *RightTrackToSet)
+{
+    LeftTrack = LeftTrackToSet;
+    RightTrack = RightTrackToSet;
+}
+
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
-{ // TODO Prevent Double Speed Due To Control Use
+{
     if(!LeftTrack || !RightTrack) { return; }
 
     LeftTrack->SetThrottle(Throw);
@@ -13,27 +19,18 @@ void UTankMovementComponent::IntendMoveForward(float Throw)
 }
 
 void UTankMovementComponent::IntendTurnRight(float Throw)
-{ // TODO Prevent Double Speed Due To Control Use
+{
     if(!LeftTrack || !RightTrack) { return; }
     LeftTrack->SetThrottle(Throw);
     RightTrack->SetThrottle(-Throw);
 }
 
 void UTankMovementComponent::IntendTurnLeft(float Throw)
-{ // TODO Prevent Double Speed Due To Control Use
+{
     if(!LeftTrack || !RightTrack) { return; }
     LeftTrack->SetThrottle(-Throw);
     RightTrack->SetThrottle(Throw);
 }
-
-
-
-void UTankMovementComponent::Initialize(UTankTrack *LeftTrackToSet, UTankTrack *RightTrackToSet)
-{
-    LeftTrack = LeftTrackToSet;
-    RightTrack = RightTrackToSet;
-}
-
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
