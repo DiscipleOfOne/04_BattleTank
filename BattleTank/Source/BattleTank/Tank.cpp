@@ -2,9 +2,6 @@
 
 #include "Tank.h"
 #include "TankAimingComponent.h"
-#include "TankBarrel.h"
-#include "Projectile.h"
-#include "TankMovementComponent.h"
 
 // Sets default values
 ATank::ATank()
@@ -13,38 +10,15 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-// Called when the game starts or when spawned
-void ATank::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called to bind functionality to input
-void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
-
 void ATank::AimAt(FVector HitLocation)
 {
-    TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
+    AActor::FindComponentByClass<UTankAimingComponent>()->AimAt(HitLocation);
 }
 
 
 void ATank::Fire()
 {
-    bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
-    if(Barrel && isReloaded)
-    {
-        FVector StartLocation = Barrel->GetSocketLocation(FName("Muzzle"));
-        auto BarrelRotator = Barrel->GetForwardVector().Rotation();
-        auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, StartLocation, BarrelRotator);
-        Projectile->LaunchProjectile(LaunchSpeed);
-        LastFireTime = FPlatformTime::Seconds();
-    }
+    AActor::FindComponentByClass<UTankAimingComponent>()->Fire();
 }
 
 
