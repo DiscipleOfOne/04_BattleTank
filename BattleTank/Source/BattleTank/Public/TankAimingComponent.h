@@ -58,14 +58,18 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = "Setup")
     TSubclassOf<AProjectile> ProjectileBlueprint;
     
+    virtual void BeginPlay() override;
+
+    
+    virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
+    FVector AimDirection = FVector(1.0f);
+    
+    bool IsBarrelMoving();
     
 protected:
     UPROPERTY(BlueprintReadOnly, Category = "State")
-    EFiringState FiringState = EFiringState::Locked;
+    EFiringState FiringState = EFiringState::Reloading;
 
-    
     void MoveBarrelTowards(FVector AimDirection);
-    
-    
-
 };
