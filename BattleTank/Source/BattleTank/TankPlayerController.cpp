@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
-#include "Tank.h"
 #include "TankAimingComponent.h"
 
 // Sets default values
@@ -15,13 +14,9 @@ ATankPlayerController::ATankPlayerController()
 void ATankPlayerController::BeginPlay()
 {
     Super::BeginPlay();
-    auto AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+    auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
     if(AimingComponent) {
         FoundAimingComponent(AimingComponent);
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Player Controller cannot find Tank Aiming Component"))
     }
 }
 
@@ -31,19 +26,17 @@ void ATankPlayerController::Tick(float DeltaTime)
     AimTowardsCrosshair();
 }
 
-ATank* ATankPlayerController::GetControlledTank() const
-{
-    return Cast<ATank>(GetPawn());
-}
-
 void ATankPlayerController::AimTowardsCrosshair()
 {
-    if(!ensure(GetControlledTank())) {return;}
+    if(!ensure(GetPawn())) {return;}
     
     FVector HitLocation; // Out Parameter
+    auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+    if(!ensure(AimingComponent)) {return; }
+    
     if(GetSightRayHitLocation(HitLocation)) // True Means It has hit something
     {
-        GetControlledTank()->AimAt(HitLocation);
+        AimingComponent->AimAt(HitLocation);
     }
 }
 
@@ -85,7 +78,7 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
     FRotator PlayerViewPointRotation;
     FHitResult HitResult;
     FVector EndLocation = LookLocation + (LookDirection * LineTraceRange);
-    FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetControlledTank());
+    FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetPawn());
     FCollisionResponseParams ResponseParameters = FCollisionResponseParams();    
     
     if (GetWorld()->LineTraceSingleByChannel

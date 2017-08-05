@@ -10,16 +10,5 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void ATank::AimAt(FVector HitLocation)
-{
-    AActor::FindComponentByClass<UTankAimingComponent>()->AimAt(HitLocation);
-}
-
-
-void ATank::Fire()
-{
-    AActor::FindComponentByClass<UTankAimingComponent>()->Fire();
-}
-
 
 

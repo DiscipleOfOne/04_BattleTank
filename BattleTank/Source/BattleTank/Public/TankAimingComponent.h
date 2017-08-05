@@ -19,7 +19,7 @@ enum class EFiringState : uint8
     Locked
 };
 
-class UTankBarrel; // Forward Declaration
+class UTankBarrel;
 class UTankTurret;
 class AProjectile;
 
@@ -47,6 +47,8 @@ public:
 public:
 
     void AimAt(FVector WorldSpaceAim);
+    
+    UFUNCTION(BlueprintCallable, Category = "Firing")
     void Fire();
 
 private:
