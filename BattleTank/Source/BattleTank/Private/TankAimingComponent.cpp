@@ -49,6 +49,12 @@ bool UTankAimingComponent::IsBarrelMoving()
     return !BarrelForward.Equals(AimDirection, 0.01f);
 }
 
+EFiringState UTankAimingComponent::GetFiringState() const
+{
+    return FiringState;
+}
+
+
 void UTankAimingComponent::AimAt(FVector WorldSpaceAim)
 {
     if(!ensure(Barrel)){ return; }
@@ -79,9 +85,7 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceAim)
     if(BHaveAimSolution)
     {
         AimDirection = OutLaunchVelocity.GetSafeNormal();
-        //MoveBarrel
         MoveBarrelTowards(AimDirection);
-        // Convert Aim Direction To Rotator That We Can you To Rotate and Elevate Barrel
     }
     
 }
@@ -93,7 +97,15 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
     auto AimAsRotator = AimDirection.Rotation();
     auto DeltaRotator = AimAsRotator - BarrelRotator;
     Barrel->Elevate(DeltaRotator.Pitch);
-    Turret->Rotate(DeltaRotator.Yaw);
+    
+    auto ShortestRotation = DeltaRotator.Yaw;
+    
+    if(FMath::Abs(DeltaRotator.Yaw) > 180)
+    {
+        ShortestRotation = (-DeltaRotator.Yaw/DeltaRotator.Yaw) * FMath::Abs(DeltaRotator.Yaw) - 180; // Subtract 180 and flip the sign
+    }
+
+    Turret->Rotate(ShortestRotation);
 }
 
 void UTankAimingComponent::Fire()

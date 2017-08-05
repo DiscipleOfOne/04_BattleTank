@@ -18,7 +18,7 @@ private:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
 	
-    UPROPERTY(EditDefaultsOnly, Category = "Setup")
-    float AcceptanceRadius = 3000.0f; // How Close Will The AI Tank Try to get
+    UPROPERTY(EditAnywhere, Category = "Setup")
+    float AcceptanceRadius = 5000.0f; // How Close Will The AI Tank Try to get
 	
 };

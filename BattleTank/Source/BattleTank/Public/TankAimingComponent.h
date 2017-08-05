@@ -31,7 +31,8 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UTankAimingComponent();
-    
+    EFiringState GetFiringState() const;
+
     UFUNCTION(BlueprintCallable, Category = "Setup")
     void Initialize(UTankBarrel *BarrelToSet, UTankTurret* TurretToSet);
     
@@ -43,6 +44,7 @@ public:
     float ReloadTimeInSeconds = 3.0f;
     
     float LastFireTime = 0.0f;
+    
 
 public:
 

@@ -13,11 +13,22 @@ void UTankTrack::BeginPlay()
     OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
 }
 
-
-void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+void UTankTrack::SetThrottle(float Throttle)
 {
-    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-    
+    CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + Throttle, -1.0f, 1.0f);
+}
+
+
+void UTankTrack::OnHit(UPrimitiveComponent *HitComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+    DriveTrack();
+    ApplySidewaysForce();
+    CurrentThrottle =  0.0f;
+}
+
+void UTankTrack::ApplySidewaysForce()
+{
+    auto DeltaTime = GetWorld()->GetDeltaSeconds();
     auto SlippageSpeed = FVector::DotProduct(GetRightVector(), GetComponentVelocity());
     auto CorrectionAcceleration = -SlippageSpeed / DeltaTime * GetRightVector();
     // Work out the required acceleration this frame to correct
@@ -28,23 +39,11 @@ void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActor
 }
 
 
-void UTankTrack::SetThrottle(float Throttle)
+void UTankTrack::DriveTrack()
 {
-
-    // TODO Clamp Throttle So player can't speed up tank
-    Throttle = FMath::Clamp(Throttle, -1.0f, 1.0f);
-
-    auto ForceApplied = GetForwardVector() * Throttle * TrackMaxDrivingForce;
+    auto ForceApplied = GetForwardVector() * CurrentThrottle * TrackMaxDrivingForce;
     auto ForceLocation = GetComponentLocation();
-
+    
     auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
     TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
 }
-
-
-void UTankTrack::OnHit(UPrimitiveComponent *HitComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
-{
-    UE_LOG(LogTemp, Error,TEXT("HIT HAS BEEN EXPERIENCED"))
-}
-
-
