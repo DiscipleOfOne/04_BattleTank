@@ -22,5 +22,13 @@ public:
     UPROPERTY(EditDefaultsOnly)
     float TrackMaxDrivingForce = 40000000.0f; // This is in newtons for a 40 ton tank 1G of acceleration
 	
-	
+private:
+    UTankTrack();
+    virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+    virtual void BeginPlay() override;
+    
+    UFUNCTION()
+    void OnHit(UPrimitiveComponent *HitComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+
 };

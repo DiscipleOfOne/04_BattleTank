@@ -28,7 +28,7 @@ void ATankPlayerController::Tick(float DeltaTime)
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-    if(!ensure(GetPawn())) {return;}
+    if(!GetPawn()) {return;}
     
     FVector HitLocation; // Out Parameter
     auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
