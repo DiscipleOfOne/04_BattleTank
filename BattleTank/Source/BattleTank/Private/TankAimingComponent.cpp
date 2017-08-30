@@ -27,18 +27,22 @@ void UTankAimingComponent::BeginPlay()
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-    if((GetWorld()->GetTimeSeconds() - LastFireTime) < ReloadTimeInSeconds)
-    {
-        FiringState = EFiringState::Reloading;
-    }
-    else if (IsBarrelMoving())
-    {
-        FiringState = EFiringState::Aiming;
-    }
-    else
-    {
-        FiringState = EFiringState::Locked;
-    }
+        if(ShotsRemaining <= 0)
+        {
+            FiringState = EFiringState::OutOfAmmo;
+        }
+        else if((GetWorld()->GetTimeSeconds() - LastFireTime) < ReloadTimeInSeconds)
+        {
+            FiringState = EFiringState::Reloading;
+        }
+        else if (IsBarrelMoving())
+        {
+            FiringState = EFiringState::Aiming;
+        }
+        else
+        {
+            FiringState = EFiringState::Locked;
+        }
 }
 
 
@@ -98,19 +102,20 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
     auto DeltaRotator = AimAsRotator - BarrelRotator;
     Barrel->Elevate(DeltaRotator.Pitch);
     
-    auto ShortestRotation = DeltaRotator.Yaw;
-    
-    if(FMath::Abs(DeltaRotator.Yaw) > 180)
+    if(FMath::Abs(DeltaRotator.Yaw) < 180)
     {
-        ShortestRotation = (-DeltaRotator.Yaw/DeltaRotator.Yaw) * FMath::Abs(DeltaRotator.Yaw) - 180; // Subtract 180 and flip the sign
+        Turret->Rotate(DeltaRotator.Yaw);
+    }
+    else
+    {
+        Turret->Rotate(-DeltaRotator.Yaw);
     }
 
-    Turret->Rotate(ShortestRotation);
 }
 
 void UTankAimingComponent::Fire()
 {
-    if(FiringState != EFiringState::Reloading)
+    if(FiringState != EFiringState::Reloading && FiringState != EFiringState::OutOfAmmo)
     {
         if(!ensure(ProjectileBlueprint)) { return; }
         if(!ensure(Barrel)) { return; }
@@ -119,6 +124,7 @@ void UTankAimingComponent::Fire()
         auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, StartLocation, BarrelRotator);
         Projectile->LaunchProjectile(LaunchSpeed);
         LastFireTime = GetWorld()->GetTimeSeconds();
+        ShotsRemaining --;
     }
 }
 
