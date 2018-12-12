@@ -52,5 +52,7 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = "Setup")
     float DestroyDelay = 10.0f;
     
+    UPROPERTY(EditDefaultsOnly, Category = "Setup")
+    float DamageAmount = 20.0f;
 
 };
