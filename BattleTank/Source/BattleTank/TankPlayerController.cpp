@@ -86,7 +86,7 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
      HitResult,
      LookLocation,
      EndLocation,
-     ECC_Visibility,
+     ECC_Camera ,
      TraceParameters,
      ResponseParameters
      ))
