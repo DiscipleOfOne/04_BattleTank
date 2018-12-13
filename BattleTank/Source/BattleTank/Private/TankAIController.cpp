@@ -22,7 +22,7 @@ void ATankAIController::Tick(float DeltaTime)
     UTankAimingComponent *TankAimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
     
     
-    if( ensure(PlayerTank && ControlledTank))
+    if(PlayerTank && ControlledTank)
     {
         MoveToActor(PlayerTank, AcceptanceRadius);
         TankAimingComponent->AimAt(PlayerTank->GetActorLocation());
