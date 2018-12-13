@@ -2,7 +2,7 @@
 
 #include "TankPlayerController.h"
 #include "TankAimingComponent.h"
-
+#include "Tank.h"
 // Sets default values
 ATankPlayerController::ATankPlayerController()
 {
@@ -99,3 +99,22 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
     return false;
     
 }
+
+
+void ATankPlayerController::SetPawn( APawn *InPawn)
+{
+    Super::SetPawn(InPawn);
+    if(InPawn)
+    {
+        auto PossessedTank = Cast<ATank> (InPawn);
+        if(!ensure(PossessedTank)) { return; }
+        
+        PossessedTank->OnTankDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
+    }
+}
+
+void ATankPlayerController::OnPossessedTankDeath()
+{
+    StartSpectatingOnly();
+}
+

@@ -21,4 +21,9 @@ private:
     UPROPERTY(EditAnywhere, Category = "Setup")
     float AcceptanceRadius = 5000.0f; // How Close Will The AI Tank Try to get
 	
+    
+    UFUNCTION()
+    void OnPossessedTankDeath();
+    
+    virtual void SetPawn( APawn *InPawn) override;
 };
